@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated project data
+data/generated/*
+!data/generated/.gitkeep
+
+outputs/*
+!outputs/.gitkeep
+
+# EnergyPlus transient files
+*.eso
+*.mtr
+*.err
+*.eio
+*.rdd
+*.mdd
+*.bnd
+*.end
+*.audit
+*.shd
+*.sqlite
+*.html
+*.htm
+*.tab
+
+# Temporary calibrated models
+*_trial.idf
+*_calibrated.idf

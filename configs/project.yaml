@@ -1,0 +1,92 @@
+project:
+  name: Virtual Temperature Sensing in Existing Buildings
+
+energyplus:
+  # ENERGYPLUS_HOME environment variable overrides this value.
+  home: C:/EnergyPlusV25-1-0
+  executable: energyplus.exe
+  idd: Energy+.idd
+  weather_file: WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw
+
+model:
+  idf: models/base/model.idf
+
+paths:
+  baseline_output_dir: outputs/baseline
+  reference_csv: data/generated/synthetic_reference.csv
+  calibration_root: outputs/calibration
+  evaluation_dir: outputs/evaluation
+
+reference:
+  # Direct reconstruction of the final historical data3.csv; no data1/data2 files.
+  seed: 42
+  bias_range: 1.5
+  drift_std: 0.02
+  sinusoid_amplitude: 0.3
+  sinusoid_period_hours: 24
+  deviation_threshold: 0.5
+  reduction_strength: 0.5
+  # Fixed order preserves the exact RNG-to-zone mapping of the original experiment.
+  zone_order:
+    - CORE_BOTTOM:Zone Mean Air Temperature [C](Hourly)
+    - TOPFLOOR_PLENUM:Zone Mean Air Temperature [C](Hourly)
+    - MIDFLOOR_PLENUM:Zone Mean Air Temperature [C](Hourly)
+    - FIRSTFLOOR_PLENUM:Zone Mean Air Temperature [C](Hourly)
+    - CORE_MID:Zone Mean Air Temperature [C](Hourly)
+    - CORE_TOP:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_TOP_ZN_3:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_TOP_ZN_2:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_TOP_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_TOP_ZN_4:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_3:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_2:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_4:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_MID_ZN_3:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_MID_ZN_2:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_MID_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_MID_ZN_4:Zone Mean Air Temperature [C](Hourly)
+
+zones:
+  primary:
+    - PERIMETER_BOT_ZN_3:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_MID_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - CORE_MID:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_4:Zone Mean Air Temperature [C](Hourly)
+    - CORE_BOTTOM:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_TOP_ZN_2:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_TOP_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_2:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_MID_ZN_2:Zone Mean Air Temperature [C](Hourly)
+  sparse_anchors:
+    - PERIMETER_MID_ZN_1:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_4:Zone Mean Air Temperature [C](Hourly)
+    - PERIMETER_BOT_ZN_3:Zone Mean Air Temperature [C](Hourly)
+
+calibration:
+  # Corrected uses active fields in the supplied IDF. Set to legacy to reproduce
+  # the field mappings of the surviving notebooks (including their no-op mappings).
+  parameter_mapping: corrected
+  bounds:
+    internal_gains: [0.6, 1.1]
+    infiltration: [0.5, 1.5]
+    vav_min_flow: [0.2, 0.6]
+    reheat_capacity: [0.8, 1.2]
+    outdoor_air: [0.5, 1.5]
+    sat_offset_c: [-1.0, 1.0]
+  optimizer:
+    maxiter: 5
+    popsize: 15
+    tol: 0.01
+    polish: false
+    seed: 42
+    disp: true
+    failure_penalty: 1000000
+    keep_trial_files: false
+    keep_failed_trials: true
+
+evaluation:
+  # 'baseline' reproduces the final report's secondary-zone evaluation.
+  # 'synthetic_reference' is also supported for an alternative controlled study.
+  secondary_reference: baseline

@@ -1,0 +1,27 @@
+{
+  "source": "Submitted Project Module report",
+  "full_best_parameters": {
+    "internal_gains": 0.978,
+    "infiltration": 0.767,
+    "vav_min_flow": 0.255,
+    "reheat_capacity": 0.980,
+    "outdoor_air": 0.523,
+    "sat_offset_c": -0.888
+  },
+  "sparse_best_parameters": {
+    "internal_gains": 0.912,
+    "infiltration": 1.181,
+    "vav_min_flow": 0.335,
+    "reheat_capacity": 1.005,
+    "outdoor_air": 1.057,
+    "sat_offset_c": -0.157
+  },
+  "reported_metrics": {
+    "full_primary_average_rmse_c": 0.387,
+    "sparse_anchor_average_rmse_c": 0.22,
+    "sparse_primary_average_rmse_c": 0.392,
+    "full_secondary_average_rmse_c_vs_baseline": 0.111,
+    "sparse_secondary_average_rmse_c_vs_baseline": 0.181,
+    "sensor_reduction_pct": 70.0
+  }
+}
